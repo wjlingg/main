@@ -4,13 +4,15 @@ import java.util.Scanner;
 public class Duke {
     private static final ArrayList<String> myList = new ArrayList<>();
     private static final Scanner SCANNER = new Scanner(System.in);
-    private static final char INPUT_COMMENT_MARKER = '#';
+    private static final int DISPLAYED_INDEX_OFFSET = 1;
 
     private static final String MESSAGE_BYE = "     Bye. Hope to see you again soon!\n";
+    private static final String MESSAGE_MARKED = "     Nice! I've marked this task as done:\n";
+    private static final String MESSAGE_TASKED = "     Here are the tasks in your list:\n";
 
     private static final String COMMAND_GET_LIST = "list";
+    private static final String COMMAND_MARKED_DONE = "done";
     private static final String COMMAND_EXIT_PROGRAM = "bye";
-    private static final int DISPLAYED_INDEX_OFFSET = 1;
     private static final String DIVIDER = "   ____________________________________________________________\n";
 
 
@@ -50,15 +52,24 @@ public class Duke {
 //    }
 
     private static void executeCommand(String userInputString) {
-        if(userInputString.equals(COMMAND_GET_LIST)){
-            System.out.println(DIVIDER);
+        if(userInputString.equals(COMMAND_GET_LIST)) {
+            System.out.println(DIVIDER + MESSAGE_TASKED);
             for (int i = 0; i < myList.size(); i++) {
                 final int displayIndex = i + DISPLAYED_INDEX_OFFSET;
+                char crosses = '\u2717';
                 System.out.println(
-                        "     " + displayIndex + ". " + myList.get(i)
+                    "     " + displayIndex + ". " + "[" + crosses + "] " + myList.get(i)
                 );
             }
             System.out.println(DIVIDER);
+        }else if(userInputString.equals(COMMAND_MARKED_DONE)){
+            int index = SCANNER.nextInt();
+            char ticks = '\u2713';
+            System.out.println(
+                DIVIDER + MESSAGE_MARKED +
+                "       [" + ticks + "] " + myList.get(index - 1) + "\n" +
+                DIVIDER
+            );
         }else if(userInputString.equals(COMMAND_EXIT_PROGRAM)){
             System.out.println(DIVIDER + MESSAGE_BYE + DIVIDER);
             System.exit(0);
