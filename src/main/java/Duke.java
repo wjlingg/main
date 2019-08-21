@@ -97,9 +97,9 @@ public class Duke {
     }
 
     /**
-     * Prompts for the command and reads the text entered by the user.
+     * Reads the text entered by the user.
      *
-     * @return full line entered by the user
+     * @return full line entered by the userby
      */
     private static String getUserInput() {
         String inputLine = SCANNER.nextLine();
