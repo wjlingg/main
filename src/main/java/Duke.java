@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Duke {
-    private static final ArrayList<Task> myList = new ArrayList<>();
+    private static final ArrayList<String> myList = new ArrayList<>();
     private static final Scanner SCANNER = new Scanner(System.in);
     private static final int DISPLAYED_INDEX_OFFSET = 1;
 
@@ -62,35 +62,13 @@ public class Duke {
      * @param userInputString  raw input from user
      */
     private static void executeCommand(String userInputString) {
-        if(userInputString.equals(COMMAND_GET_LIST)) {
-            System.out.println(DIVIDER + MESSAGE_TASKED);
-            for (int i = 0; i < myList.size(); i++) {
-                final int displayIndex = i + DISPLAYED_INDEX_OFFSET;
-                System.out.println(
-                    "     " + displayIndex + ". [" + myList.get(i).getStatusIcon() + "] "
-                            + myList.get(i).description
-                );
-            }
-            System.out.println(DIVIDER);
-        }else if(userInputString.contains(COMMAND_MARKED_DONE)){
-            //splitting the string into "done" and integer
-            String[] arrOfStr = userInputString.split(" ", 2);
-            //converting string to integer
-            int index = Integer.parseInt(arrOfStr[1]);
-            //marking targeted item as completed
-            myList.get(index - 1).markAsDone();
-            System.out.println(
-                DIVIDER + MESSAGE_MARKED +
-                "       [" + myList.get(index - 1).getStatusIcon() + "] "
-                        + myList.get(index - 1).description + "\n" + DIVIDER
-            );
-        }else if(userInputString.equals(COMMAND_EXIT_PROGRAM)){
+        if(userInputString.equals(COMMAND_EXIT_PROGRAM)){
             System.out.println(DIVIDER + MESSAGE_BYE + DIVIDER);
             System.exit(0);
         }else{
             System.out.println(
                 DIVIDER +
-                "     added: " + userInputString + "\n" +
+                "     " + userInputString + "\n" +
                 DIVIDER
             );
         }
@@ -99,14 +77,11 @@ public class Duke {
     /**
      * Reads the text entered by the user.
      *
-     * @return full line entered by the userby
+     * @return full line entered by the user
      */
     private static String getUserInput() {
         String inputLine = SCANNER.nextLine();
-        Task t = new Task(inputLine);
-        if (!inputLine.equals(COMMAND_GET_LIST) && !inputLine.contains(COMMAND_MARKED_DONE)) {
-            myList.add(t);
-        }
+        myList.add(inputLine);
         // silently consume all blank
         while (inputLine.trim().isEmpty()) {
             inputLine = SCANNER.nextLine();
