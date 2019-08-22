@@ -1,6 +1,6 @@
 public class Task {
-    protected String description;
-    protected boolean isDone;
+    protected String description; //User input
+    protected boolean isDone; //To check if the task is completed
 
     public Task(String description) {
         this.description = description; //user input string
