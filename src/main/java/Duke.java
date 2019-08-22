@@ -73,17 +73,27 @@ public class Duke {
             }
             System.out.println(DIVIDER);
         }else if(userInputString.contains(COMMAND_MARKED_DONE)){
-            //splitting the string into "done" and integer
-            String[] arrOfStr = userInputString.split(" ", 2);
-            //converting string to integer
-            int index = Integer.parseInt(arrOfStr[1]);
-            //marking targeted item as completed
-            myList.get(index - 1).markAsDone();
-            System.out.println(
-                DIVIDER + MESSAGE_MARKED +
-                "       [" + myList.get(index - 1).getStatusIcon() + "] "
-                        + myList.get(index - 1).description + "\n" + DIVIDER
-            );
+            try {
+                //splitting the string into "done" and integer
+                String[] arrOfStr = userInputString.split(" ", 2);
+                //converting string to integer
+                int index = Integer.parseInt(arrOfStr[1]);
+                //marking targeted item as completed
+                myList.get(index - 1).markAsDone();
+                System.out.println(
+                        DIVIDER + MESSAGE_MARKED +
+                                "       [" + myList.get(index - 1).getStatusIcon() + "] "
+                                + myList.get(index - 1).description + "\n" + DIVIDER
+                );
+            }catch(Exception e){
+                Task s = new Task(userInputString);
+                myList.add(s);
+                System.out.println(
+                    DIVIDER +
+                    "     added: " + userInputString + "\n" +
+                    DIVIDER
+                );
+            }
         }else if(userInputString.equals(COMMAND_EXIT_PROGRAM)){
             System.out.println(DIVIDER + MESSAGE_BYE + DIVIDER);
             System.exit(0);
