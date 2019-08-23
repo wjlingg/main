@@ -9,7 +9,7 @@ public class Duke {
 
     private static final String MESSAGE_BYE = "     Bye. Hope to see you again soon!\n";
     private static final String MESSAGE_MARKED = "     Nice! I've marked this task as done:\n";
-    private static final String MESSAGE_TASKED = "     Here are the tasks in your list:\n";
+    private static final String MESSAGE_TASKED = "     Here are the tasks in your list:";
     private static final String MESSAGE_ADDED = "     Got it. I've added this task:\n";
     private static final String MESSAGE_ITEMS1 = "     Now you have ";
     private static final String MESSAGE_ITEMS2 = " tasks in the list.\n";
@@ -20,6 +20,7 @@ public class Duke {
     private static final String COMMAND_MARKED_DONE = "done";
     private static final String COMMAND_DEADLINE = "deadline";
     private static final String COMMAND_TODO = "todo";
+    private static final String COMMAND_EVENT = "event";
     private static final String COMMAND_EXIT_PROGRAM = "bye";
     private static final String DIVIDER = "   ____________________________________________________________\n";
 
@@ -83,16 +84,16 @@ public class Duke {
                 //marking targeted item as completed
                 myList.get(index - 1).markAsDone();
                 System.out.println(
-                        DIVIDER + MESSAGE_MARKED +
-                                "       " + myList.get(index - 1) + "\n" + DIVIDER
+                    DIVIDER + MESSAGE_MARKED +
+                    "       " + myList.get(index - 1) + "\n" + DIVIDER
                 );
             } catch (Exception e) {
                 Task s = new Task(userInputString);
                 myList.add(s);
                 System.out.println(
-                        DIVIDER +
-                                "     added: " + userInputString + "\n" +
-                                DIVIDER
+                    DIVIDER +
+                    "     added: " + userInputString + "\n" +
+                    DIVIDER
                 );
             }
         }else if(userInputString.contains(COMMAND_TODO)){
@@ -114,9 +115,9 @@ public class Duke {
                 DIVIDER
             );
         }else if(userInputString.contains(COMMAND_DEADLINE)){
-            String[] arrOfStrSlash = userInputString.split("/", 3);
-            String str1 = arrOfStrSlash[1];
-            String[] arrOfStrSpace = arrOfStrSlash[0].split("\\s", 2);
+            String[] arrOfStrDeadlineSlash = userInputString.split("/", 3);
+            String str1 = arrOfStrDeadlineSlash[1];
+            String[] arrOfStrSpace = arrOfStrDeadlineSlash[0].split("\\s", 2);
             String str2 = arrOfStrSpace[1];
             String date = "";
             if(str1.contains("by")){
@@ -136,6 +137,30 @@ public class Duke {
                 DIVIDER + MESSAGE_ADDED +
                 "       " + myList.get(myList.size()-1) + "\n" + MESSAGE_ITEMS1 + myList.size() + msg +
                 DIVIDER
+            );
+        }else if(userInputString.contains(COMMAND_EVENT)) {
+            String[] arrOfStrEventSlash = userInputString.split("/", 3);
+            String str1 = arrOfStrEventSlash[1];
+            String[] arrOfStrSpace = arrOfStrEventSlash[0].split("\\s", 2);
+            String str2 = arrOfStrSpace[1];
+            String date = "";
+            if (str1.contains("at")) {
+                String[] arrSubString = str1.split("\\s", 2);
+                date = arrSubString[1];
+            }
+            Task[] event = new Task[100];
+            event[0] = new Event(str2, date);
+            myList.add(event[0]);
+            String msg;
+            if (myList.size() == 1) {
+                msg = " task in the list.\n";
+            } else {
+                msg = MESSAGE_ITEMS2;
+            }
+            System.out.println(
+                    DIVIDER + MESSAGE_ADDED +
+                            "       " + myList.get(myList.size() - 1) + "\n" + MESSAGE_ITEMS1 + myList.size() + msg +
+                            DIVIDER
             );
         }else if(userInputString.equals(COMMAND_EXIT_PROGRAM)){
             System.out.println(DIVIDER + MESSAGE_BYE + DIVIDER);
@@ -158,7 +183,8 @@ public class Duke {
         String inputLine = SCANNER.nextLine();
         Task t = new Task(inputLine);
         if (!inputLine.equals(COMMAND_GET_LIST) && !inputLine.contains(COMMAND_MARKED_DONE)
-                && !inputLine.contains(COMMAND_TODO) && !inputLine.contains(COMMAND_DEADLINE)) {
+                && !inputLine.contains(COMMAND_TODO) && !inputLine.contains(COMMAND_DEADLINE)
+                && !inputLine.contains(COMMAND_EVENT)) {
             myList.add(t);
         }
         // silently consume all blank
