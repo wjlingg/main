@@ -8,7 +8,7 @@ public class Duke {
 
     private static final String MESSAGE_BYE = "     Bye. Hope to see you again soon!\n";
     private static final String MESSAGE_MARKED = "     Nice! I've marked this task as done:\n";
-    private static final String MESSAGE_TASKED = "     Here are the tasks in your list:\n";
+    private static final String MESSAGE_TASKED = "     Here are the tasks in your list:";
 
     private static final String COMMAND_GET_LIST = "list";
     private static final String COMMAND_MARKED_DONE = "done";
@@ -20,7 +20,6 @@ public class Duke {
      * Initializes the application and starts the interaction with the user.
      */
     public static void main(String[] args) {
-        showLogo();
         showHelloMessage();
         while (true) {
             String userCommand = getUserInput();
@@ -29,26 +28,22 @@ public class Duke {
     }
 
     /**
-     * Display logo of the program
-     */
-    private static void showLogo(){
-        String logo = " ____        _        \n"
-                + "|  _ \\ _   _| | _____ \n"
-                + "| | | | | | | |/ / _ \\\n"
-                + "| |_| | |_| |   <  __/\n"
-                + "|____/ \\__,_|_|\\_\\___|\n";
-        System.out.println("Hello from\n" + logo);
-    }
-
-    /**
      * Display welcome message of the program
      */
     private static void showHelloMessage() {
+
+        String logo = "      ___         _        \n"
+                + "     |  _ \\ _   _| | _____ \n"
+                + "     | | | | | | | |/ / _ \\\n"
+                + "     | |_| | |_| |   <  __/\n"
+                + "     |____/ \\__,_|_|\\_\\___|\n"
+                + "\n";
+
         System.out.println(
-            DIVIDER +
-            "     Hello! I'm Duke\n" +
-            "     What can I do for you?\n" +
-            DIVIDER
+                DIVIDER + logo +
+                        "     Hello! I'm Duke\n" +
+                        "     What can I do for you?\n" +
+                        DIVIDER
         );
     }
 
@@ -67,8 +62,8 @@ public class Duke {
             for (int i = 0; i < myList.size(); i++) {
                 final int displayIndex = i + DISPLAYED_INDEX_OFFSET;
                 System.out.println(
-                    "     " + displayIndex + ". [" + myList.get(i).getStatusIcon() + "] "
-                            + myList.get(i).description
+                        "     " + displayIndex + ". [" + myList.get(i).getStatusIcon() + "] "
+                                + myList.get(i).description
                 );
             }
             System.out.println(DIVIDER);
@@ -89,9 +84,9 @@ public class Duke {
                 Task s = new Task(userInputString);
                 myList.add(s);
                 System.out.println(
-                    DIVIDER +
-                    "     added: " + userInputString + "\n" +
-                    DIVIDER
+                        DIVIDER +
+                                "     added: " + userInputString + "\n" +
+                                DIVIDER
                 );
             }
         }else if(userInputString.equals(COMMAND_EXIT_PROGRAM)){
@@ -99,9 +94,9 @@ public class Duke {
             System.exit(0);
         }else{
             System.out.println(
-                DIVIDER +
-                "     added: " + userInputString + "\n" +
-                DIVIDER
+                    DIVIDER +
+                            "     added: " + userInputString + "\n" +
+                            DIVIDER
             );
         }
     }
