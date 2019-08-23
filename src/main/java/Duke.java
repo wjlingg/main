@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Duke {
@@ -108,18 +109,33 @@ public class Duke {
                 msg = MESSAGE_ITEMS2;
             }
             System.out.println(
-                    DIVIDER + MESSAGE_ADDED +
-                            "       " + myList.get(index-1) + "\n" + MESSAGE_ITEMS1 + index + msg +
-                            DIVIDER
+                DIVIDER + MESSAGE_ADDED +
+                "       " + myList.get(index-1) + "\n" + MESSAGE_ITEMS1 + index + msg +
+                DIVIDER
             );
         }else if(userInputString.contains(COMMAND_DEADLINE)){
+            String[] arrOfStrSlash = userInputString.split("/", 3);
+            String str1 = arrOfStrSlash[1];
+            String[] arrOfStrSpace = arrOfStrSlash[0].split("\\s", 2);
+            String str2 = arrOfStrSpace[1];
+            String date = "";
+            if(str1.contains("by")){
+                String[] arrSubString = str1.split("\\s", 2);
+                date = arrSubString[1];
+            }
             Task[] deadline = new Task[100];
-            deadline[0] = new Deadline(userInputString, deadline.toString());
+            deadline[0] = new Deadline(str2, date);
             myList.add(deadline[0]);
+            String msg;
+            if(myList.size() == 1){
+                msg = " task in the list.\n";
+            }else{
+                msg = MESSAGE_ITEMS2;
+            }
             System.out.println(
-                    DIVIDER + MESSAGE_ADDED +
-                            "     " + myList.toString() + "\n" +
-                            DIVIDER
+                DIVIDER + MESSAGE_ADDED +
+                "       " + myList.get(myList.size()-1) + "\n" + MESSAGE_ITEMS1 + myList.size() + msg +
+                DIVIDER
             );
         }else if(userInputString.equals(COMMAND_EXIT_PROGRAM)){
             System.out.println(DIVIDER + MESSAGE_BYE + DIVIDER);
