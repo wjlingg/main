@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class Duke {
@@ -41,7 +40,8 @@ public class Duke {
      */
     private static void showHelloMessage() {
 
-        String logo = "      ___         _        \n"
+        String logo =
+                  "      ___         _        \n"
                 + "     |  _ \\ _   _| | _____ \n"
                 + "     | | | | | | | |/ / _ \\\n"
                 + "     | |_| | |_| |   <  __/\n"
@@ -49,10 +49,10 @@ public class Duke {
                 + "\n";
 
         System.out.println(
-                DIVIDER + logo +
-                        "     Hello! I'm Duke\n" +
-                        "     What can I do for you?\n" +
-                        DIVIDER
+            DIVIDER + logo +
+            "     Hello! I'm Duke\n" +
+            "     What can I do for you?\n" +
+            DIVIDER
         );
     }
 
@@ -76,28 +76,18 @@ public class Duke {
             }
             System.out.println(DIVIDER);
         }else if(userInputString.contains(COMMAND_MARKED_DONE)) {
-            try {
-                //splitting the string into "done" and integer
-                String[] arrOfStrDone = userInputString.split(" ", 2);
-                //converting string to integer
-                int index = Integer.parseInt(arrOfStrDone[1]);
-                //marking targeted item as completed
-                myList.get(index - 1).markAsDone();
-                System.out.println(
-                    DIVIDER + MESSAGE_MARKED +
-                    "       " + myList.get(index - 1) + "\n" + DIVIDER
-                );
-            } catch (Exception e) {
-                Task s = new Task(userInputString);
-                myList.add(s);
-                System.out.println(
-                    DIVIDER +
-                    "     added: " + userInputString + "\n" +
-                    DIVIDER
-                );
-            }
+            //splitting the string into "done" and integer
+            String[] arrOfStrDone = userInputString.split(" ", 2);
+            //converting string to integer
+            int index = Integer.parseInt(arrOfStrDone[1]);
+            //marking targeted item as completed
+            myList.get(index - 1).markAsDone();
+            System.out.println(
+                DIVIDER + MESSAGE_MARKED +
+                "       " + myList.get(index - 1) + "\n" + DIVIDER
+            );
         }else if(userInputString.contains(COMMAND_TODO)){
-            String[] arrOfStrTodo = userInputString.split(" ", 2);
+            String[] arrOfStrTodo = userInputString.split("\\s", 2);
             String str = arrOfStrTodo[1];
             Task[] todo = new Task[100];
             todo[0] = new Todo(str);
@@ -162,16 +152,17 @@ public class Duke {
                             "       " + myList.get(myList.size() - 1) + "\n" + MESSAGE_ITEMS1 + myList.size() + msg +
                             DIVIDER
             );
-        }else if(userInputString.equals(COMMAND_EXIT_PROGRAM)){
+        }else if(userInputString.equals(COMMAND_EXIT_PROGRAM)) {
             System.out.println(DIVIDER + MESSAGE_BYE + DIVIDER);
             System.exit(0);
-        }else{
-            System.out.println(
-                    DIVIDER +
-                            "     added: " + userInputString + "\n" +
-                            DIVIDER
-            );
         }
+//        }else{
+//            System.out.println(
+//                    DIVIDER +
+//                            "     added: " + userInputString + "\n" +
+//                            DIVIDER
+//            );
+//        }
     }
 
     /**
@@ -181,12 +172,6 @@ public class Duke {
      */
     private static String getUserInput() {
         String inputLine = SCANNER.nextLine();
-        Task t = new Task(inputLine);
-        if (!inputLine.equals(COMMAND_GET_LIST) && !inputLine.contains(COMMAND_MARKED_DONE)
-                && !inputLine.contains(COMMAND_TODO) && !inputLine.contains(COMMAND_DEADLINE)
-                && !inputLine.contains(COMMAND_EVENT)) {
-            myList.add(t);
-        }
         // silently consume all blank
         while (inputLine.trim().isEmpty()) {
             inputLine = SCANNER.nextLine();

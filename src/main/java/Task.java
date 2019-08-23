@@ -15,6 +15,11 @@ public class Task {
         return (isDone ? "\u2713" : "\u2718"); //return tick or X symbols
     }
 
+    /**
+     * toString() provides a String representation of the Task object.
+     *
+     * @returns   a string representation of the Task object
+     */
     public String toString(){
         String cross = "\u2718";
         return "[" + getStatusIcon() + "] " + description;
