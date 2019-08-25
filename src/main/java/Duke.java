@@ -6,13 +6,16 @@ public class Duke {
     private static final Scanner SCANNER = new Scanner(System.in);
     private static final int DISPLAYED_INDEX_OFFSET = 1;
 
-    private static final String MESSAGE_BYE = "     Bye. Hope to see you again soon!\n";
-    private static final String MESSAGE_MARKED = "     Nice! I've marked this task as done:\n";
     private static final String MESSAGE_TASKED = "     Here are the tasks in your list:";
+    private static final String MESSAGE_MARKED = "     Nice! I've marked this task as done:\n";
     private static final String MESSAGE_ADDED = "     Got it. I've added this task:\n";
     private static final String MESSAGE_ITEMS1 = "     Now you have ";
     private static final String MESSAGE_ITEMS2 = " tasks in the list.\n";
+    private static final String MESSAGE_DELETE = "     Noted. I've removed this task:\n";
+    private static final String MESSAGE_BYE = "     Bye. Hope to see you again soon!\n";
 
+    private static final String ERROR_MESSAGE_TODO = "  ☹ OOPS!!! The description of a todo cannot be empty.\n";
+    private static final String ERROR_MESSAGE_RANDOM = "  ☹ OOPS!!! I'm sorry, but I don't know what that means :-(\n";
 
 
     private static final String COMMAND_GET_LIST = "list";
@@ -20,6 +23,7 @@ public class Duke {
     private static final String COMMAND_DEADLINE = "deadline";
     private static final String COMMAND_TODO = "todo";
     private static final String COMMAND_EVENT = "event";
+    private static final String COMMAND_DELETE = "delete";
     private static final String COMMAND_EXIT_PROGRAM = "bye";
     private static final String DIVIDER = "   ____________________________________________________________\n";
 
@@ -75,94 +79,73 @@ public class Duke {
                 );
             }
             System.out.println(DIVIDER);
-        }else if(userInputString.contains(COMMAND_MARKED_DONE)) {
-            //splitting the string into "done" and integer
-            String[] arrOfStrDone = userInputString.split(" ", 2);
-            //converting string to integer
-            int index = Integer.parseInt(arrOfStrDone[1]);
-            //marking targeted item as completed
-            myList.get(index - 1).markAsDone();
-            System.out.println(
-                DIVIDER + MESSAGE_MARKED +
-                "       " + myList.get(index - 1) + "\n" + DIVIDER
-            );
-        }else if(userInputString.contains(COMMAND_TODO)){
-            String[] arrOfStrTodo = userInputString.split("\\s", 2);
-            String str = arrOfStrTodo[1];
-            Task[] todo = new Task[100];
-            todo[0] = new Todo(str);
-            myList.add(todo[0]);
-            int index = myList.size();
-            String msg;
-            if(index == 1){
-                msg = " task in the list.\n";
-            }else{
-                msg = MESSAGE_ITEMS2;
-            }
-            System.out.println(
-                DIVIDER + MESSAGE_ADDED +
-                "       " + myList.get(index-1) + "\n" + MESSAGE_ITEMS1 + index + msg +
-                DIVIDER
-            );
-        }else if(userInputString.contains(COMMAND_DEADLINE)){
-            String[] arrOfStrDeadlineSlash = userInputString.split("/", 3);
-            String str1 = arrOfStrDeadlineSlash[1];
-            String[] arrOfStrSpace = arrOfStrDeadlineSlash[0].split("\\s", 2);
-            String str2 = arrOfStrSpace[1];
-            String date = "";
-            if(str1.contains("by")){
-                String[] arrSubString = str1.split("\\s", 2);
-                date = arrSubString[1];
-            }
-            Task[] deadline = new Task[100];
-            deadline[0] = new Deadline(str2, date);
-            myList.add(deadline[0]);
-            String msg;
-            if(myList.size() == 1){
-                msg = " task in the list.\n";
-            }else{
-                msg = MESSAGE_ITEMS2;
-            }
-            System.out.println(
-                DIVIDER + MESSAGE_ADDED +
-                "       " + myList.get(myList.size()-1) + "\n" + MESSAGE_ITEMS1 + myList.size() + msg +
-                DIVIDER
-            );
-        }else if(userInputString.contains(COMMAND_EVENT)) {
-            String[] arrOfStrEventSlash = userInputString.split("/", 3);
-            String str1 = arrOfStrEventSlash[1];
-            String[] arrOfStrSpace = arrOfStrEventSlash[0].split("\\s", 2);
-            String str2 = arrOfStrSpace[1];
-            String date = "";
-            if (str1.contains("at")) {
-                String[] arrSubString = str1.split("\\s", 2);
-                date = arrSubString[1];
-            }
-            Task[] event = new Task[100];
-            event[0] = new Event(str2, date);
-            myList.add(event[0]);
-            String msg;
-            if (myList.size() == 1) {
-                msg = " task in the list.\n";
-            } else {
-                msg = MESSAGE_ITEMS2;
-            }
-            System.out.println(
-                    DIVIDER + MESSAGE_ADDED +
-                            "       " + myList.get(myList.size() - 1) + "\n" + MESSAGE_ITEMS1 + myList.size() + msg +
-                            DIVIDER
-            );
         }else if(userInputString.equals(COMMAND_EXIT_PROGRAM)) {
             System.out.println(DIVIDER + MESSAGE_BYE + DIVIDER);
             System.exit(0);
+        }else{
+            String[] command = userInputString.split("\\s", 2);
+            String msg = "";
+            String types = command[0]; //getting the type of task input
+            String description = command[1]; //getting the details of the task
+            if(types.equals(COMMAND_MARKED_DONE)) {
+                //converting string to integer
+                int index = Integer.parseInt(description);
+                //marking targeted item as completed
+                myList.get(index - 1).markAsDone();
+                System.out.println(
+                    DIVIDER + MESSAGE_MARKED +
+                    "       " + myList.get(index - 1) + "\n" + DIVIDER
+                );
+            }else if(types.equals(COMMAND_TODO)){
+                myList.add(new Todo(description));
+                int index = myList.size();
+                if (index == 1) {
+                    msg = " task in the list.\n";
+                } else {
+                    msg = MESSAGE_ITEMS2;
+                }
+                System.out.println(
+                    DIVIDER + MESSAGE_ADDED +
+                    "       " + myList.get(index - 1) + "\n" + MESSAGE_ITEMS1 + index + msg +
+                    DIVIDER
+                );
+            }else if(types.equals(COMMAND_DEADLINE)){
+                String[] strDeadline = description.split(" /by ", 2);
+                myList.add(new Deadline(strDeadline[0], strDeadline[1]));
+                if(myList.size() == 1){
+                    msg = " task in the list.\n";
+                }else{
+                    msg = MESSAGE_ITEMS2;
+                }
+                System.out.println(
+                    DIVIDER + MESSAGE_ADDED +
+                    "       " + myList.get(myList.size()-1) + "\n" + MESSAGE_ITEMS1 + myList.size() + msg +
+                    DIVIDER
+                );
+            }else if(types.equals(COMMAND_EVENT)) {
+                String[] strEvent = description.split(" /at ", 2);
+                myList.add(new Event(strEvent[0], strEvent[1]));
+                if (myList.size() == 1) {
+                    msg = " task in the list.\n";
+                } else {
+                    msg = MESSAGE_ITEMS2;
+                }
+                System.out.println(
+                    DIVIDER + MESSAGE_ADDED +
+                    "       " + myList.get(myList.size() - 1) + "\n" + MESSAGE_ITEMS1 + myList.size() + msg +
+                    DIVIDER
+                );
+            }else if(userInputString.contains(COMMAND_DELETE)) {
+                int index = Integer.parseInt(description);
+                Task removed = myList.get(index - 1);
+                myList.remove(removed);
+                System.out.println(
+                    DIVIDER + MESSAGE_DELETE +
+                    "       " + removed + "\n" + MESSAGE_ITEMS1 + myList.size() + MESSAGE_ITEMS2 +
+                    DIVIDER
+                );
+            }
         }
-//        }else{
-//            System.out.println(
-//                    DIVIDER +
-//                            "     added: " + userInputString + "\n" +
-//                            DIVIDER
-//            );
-//        }
     }
 
     /**
