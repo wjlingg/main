@@ -3,6 +3,7 @@ import java.util.Scanner;
 
 public class Duke {
     private static final ArrayList<Task> myList = new ArrayList<>();
+
     private static final Scanner SCANNER = new Scanner(System.in);
     private static final int DISPLAYED_INDEX_OFFSET = 1;
 
@@ -151,16 +152,16 @@ public class Duke {
         }
     }
 
-    private static void commandDeadline(String userInputString) throws DukeException{
+    private static void commandDeadline(String userInputString) throws DukeException {
         String msg = "";
         if(userInputString.trim().equals(COMMAND_DEADLINE)){
             System.out.print(DIVIDER);
             throw new DukeException(ERROR_MESSAGE_GENERAL + MESSAGE_FOLLOWUP_NUll + DIVIDER);
         }else{
-            String types = userInputString.split("\\s",2)[0];
             String description = userInputString.split("\\s",2)[1];
+            String details = description.split(" /by ",2)[0];
             String date = description.split(" /by ",2)[1];
-            myList.add(new Deadline(types, date));
+            myList.add(new Deadline(details, convertDate(date)));
             int index = myList.size();
             if (index == 1) {
                 msg = " task in the list.\n";
@@ -181,10 +182,10 @@ public class Duke {
             System.out.print(DIVIDER);
             throw new DukeException(ERROR_MESSAGE_GENERAL + MESSAGE_FOLLOWUP_NUll + DIVIDER);
         } else {
-            String types = userInputString.split("\\s", 2)[0];
-            String description = userInputString.split("\\s", 2)[1];
-            String date = description.split(" /at ", 2)[1];
-            myList.add(new Event(types, date));
+            String description = userInputString.split("\\s",2)[1];
+            String details = description.split(" /at ",2)[0];
+            String date = description.split(" /at ",2)[1];
+            myList.add(new Event(details, date));
             int index = myList.size();
             if (index == 1) {
                 msg = " task in the list.\n";
@@ -197,6 +198,54 @@ public class Duke {
                             DIVIDER
             );
         }
+    }
+
+    private static String convertDate (String userInputDate) {
+        String suffix = "";// st, nd, rd, th
+        String extra = "";// am, pm
+        String month = "";
+        String dateline = "";//final conversion
+
+        String[] monthArray = {"January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"};
+
+        String date = userInputDate.split("\\s", 2)[0];
+        String time = userInputDate.split("\\s", 2)[1];
+        String min = time.substring(2, 4);//last 2 digits of the time
+        String yr = date.split("/", 3)[2];
+
+        int hr;
+        int day = Integer.parseInt(date.split("/", 3)[0]);
+        int mth = Integer.parseInt(date.split("/", 3)[1]);
+        int first = Integer.parseInt(time.substring(0, 1));//first digit of the time
+        int second = Integer.parseInt(time.substring(1, 2));//second digit of the time
+
+        if(day == 1 || day == 21 || day == 31){
+            suffix = "st";
+        }else if(day == 2 || day == 22){
+            suffix = "nd";
+        }else if(day == 3 || day == 23){
+            suffix = "rd";
+        }else{
+            suffix = "th";
+        }
+
+        //differentiating morning and afternoon
+        extra = (first == 0 || (first == 1 && (second == 0 || second == 1))) ? "am" : "pm";
+        int change = Integer.parseInt(time.substring(0, 2)) - 12;
+        //converting the hours
+        hr = (first == 0) ? ((second == 0) ? 12 : second) :
+                ((first == 1) ? ((second <= 2) ? (first*10 + second) :
+                        change) : change);
+        //converting the month
+        for (int i = 0; i < 12; i++){
+            if(mth == i + 1){
+                month = monthArray[i];
+            }
+        }
+
+        dateline = day + suffix + " of " + month + " " + yr + ", " + hr + "." + min + extra;
+        return dateline;
     }
 
     /**
