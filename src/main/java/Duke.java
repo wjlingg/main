@@ -2,13 +2,16 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Duke {
-    private static final ArrayList<String> myList = new ArrayList<>();
+    private static final ArrayList<Task> myList = new ArrayList<>();
     private static final Scanner SCANNER = new Scanner(System.in);
     private static final int DISPLAYED_INDEX_OFFSET = 1;
 
+    private static final String MESSAGE_TASKED = "     Here are the tasks in your list:";
+    private static final String MESSAGE_MARKED = "     Nice! I've marked this task as done:\n";
     private static final String MESSAGE_BYE = "     Bye. Hope to see you again soon!\n";
 
-    private static final String COMMAND_GET_LIST = "list";
+    private static final String COMMAND_LIST = "list";
+    private static final String COMMAND_DONE = "done";
     private static final String COMMAND_EXIT_PROGRAM = "bye";
 
     private static final String DIVIDER = "   ____________________________________________________________\n";
@@ -49,13 +52,15 @@ public class Duke {
     /**
      * Executes the command as specified by the {@code userInputString}
      * Adding items to the list
+     * Display items in the list
+     * Mark items in the list as completed
      * Exit program as requested
      *
      * @param userInputString raw input from user
      */
     private static void executeCommand(String userInputString) {
-        if(userInputString.trim().equals(COMMAND_GET_LIST)) {
-            System.out.print(DIVIDER);
+        if(userInputString.trim().equals(COMMAND_LIST)) {
+            System.out.println(DIVIDER + MESSAGE_TASKED);
             for (int i = 0; i < myList.size(); i++) {
                 final int displayIndex = i + DISPLAYED_INDEX_OFFSET;
                 System.out.println(
@@ -66,10 +71,29 @@ public class Duke {
         }else if (userInputString.trim().equals(COMMAND_EXIT_PROGRAM)) {
             System.out.println(DIVIDER + MESSAGE_BYE + DIVIDER);
             System.exit(0);
-        } else {
-            myList.add(userInputString);
-            System.out.println(DIVIDER + "      added: " + userInputString + "\n" + DIVIDER);
+        }else if(userInputString.contains(COMMAND_DONE)){
+            commandDone(userInputString);
+        }else{
+            Task s = new Task(userInputString);
+            myList.add(s);
+            System.out.println(
+                    DIVIDER +
+                            "     added: " + userInputString + "\n" +
+                            DIVIDER
+            );
         }
+    }
+
+    private static void commandDone(String userInputString){
+        String description = userInputString.split("\\s",2)[1];
+        //converting string to integer
+        int index = Integer.parseInt(description);
+        //marking targeted item as completed
+        myList.get(index - 1).markAsDone();
+        System.out.println(
+                DIVIDER + MESSAGE_MARKED +
+                        "       " + myList.get(index - 1) + "\n" + DIVIDER
+        );
     }
 
     /**
