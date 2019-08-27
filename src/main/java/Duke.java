@@ -12,14 +12,22 @@ public class Duke {
     private static final String MESSAGE_ITEMS1 = "     Now you have ";
     private static final String MESSAGE_ITEMS2 = " tasks in the list.\n";
     private static final String MESSAGE_BYE = "     Bye. Hope to see you again soon!\n";
+    private static final String MESSAGE_FOLLOWUP_INVALID_INDEX = "     Kindly enter command with index not more than ";
+    private static final String MESSAGE_FOLLOWUP_EMPTY_INDEX = "       Kindly enter the command again with aN INDEX.\n";
+    private static final String MESSAGE_FOLLOWUP_NUll = "       Kindly enter the command again with a description.\n";
 
-    private static final String COMMAND_LIST = "list";
+    private static final String ERROR_MESSAGE_GENERAL = "       ☹ OOPS!!! The description cannot be empty.\n";
+    private static final String ERROR_MESSAGE_RANDOM = "     ☹ OOPS!!! I'm sorry, but I don't know what that means :-(\n";
+    private static final String ERROR_MESSAGE_EMPTY_LIST = "       ☹ OOPS!!! The list is empty.\n       Kindly add a task.\n";
+    private static final String ERROR_MESSAGE_EMPTY_INDEX = "       ☹ OOPS!!! The index cannot be empty.\n";
+    private static final String ERROR_MESSAGE_INVALID_INDEX = "     Invalid index entered.\n";
+
+    private static final String COMMAND_GET_LIST = "list";
     private static final String COMMAND_DONE = "done";
     private static final String COMMAND_DEADLINE = "deadline";
     private static final String COMMAND_TODO = "todo";
     private static final String COMMAND_EVENT = "event";
     private static final String COMMAND_EXIT_PROGRAM = "bye";
-
     private static final String DIVIDER = "   ____________________________________________________________\n";
 
     /**
@@ -65,95 +73,130 @@ public class Duke {
      * @param userInputString raw input from user
      */
     private static void executeCommand(String userInputString) {
-        if(userInputString.trim().equals(COMMAND_LIST)) {
-            System.out.println(DIVIDER + MESSAGE_TASKED);
-            for (int i = 0; i < myList.size(); i++) {
-                final int displayIndex = i + DISPLAYED_INDEX_OFFSET;
+        try {
+            if(userInputString.trim().equals(COMMAND_GET_LIST)) {
+                System.out.println(DIVIDER + MESSAGE_TASKED);
+                for (int i = 0; i < myList.size(); i++) {
+                    final int displayIndex = i + DISPLAYED_INDEX_OFFSET;
+                    System.out.println(
+                            "     " + displayIndex + ". " + myList.get(i)
+                    );
+                }
+                System.out.println(DIVIDER);
+            }else if(userInputString.trim().equals(COMMAND_EXIT_PROGRAM)) {
+                System.out.println(DIVIDER + MESSAGE_BYE + DIVIDER);
+                System.exit(0);
+            }else if (userInputString.contains(COMMAND_DONE)) {
+                commandDone(userInputString);
+            }else if(userInputString.contains(COMMAND_TODO)){
+                commandTodo(userInputString);
+            }else if(userInputString.contains(COMMAND_DEADLINE)){
+                commandDeadline(userInputString);
+            }else if(userInputString.contains(COMMAND_EVENT)){
+                commandEvent(userInputString);
+            }else{
+                System.out.print(DIVIDER);
+                throw new DukeException(ERROR_MESSAGE_RANDOM + DIVIDER);
+            }
+        }catch(DukeException e){
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private static void commandDone(String userInputString) throws DukeException{
+        if(userInputString.trim().equals(COMMAND_DONE)){
+            System.out.print(DIVIDER);
+            throw new DukeException(ERROR_MESSAGE_EMPTY_INDEX + MESSAGE_FOLLOWUP_EMPTY_INDEX + DIVIDER);
+        }else{
+            String description = userInputString.split("\\s",2)[1];
+            //converting string to integer
+            int index = Integer.parseInt(description);
+            if(index > myList.size()){
+                System.out.print(DIVIDER);
+                if(myList.size() == 0){
+                    throw new DukeException(ERROR_MESSAGE_EMPTY_LIST + DIVIDER);
+                }else {
+                    throw new DukeException(ERROR_MESSAGE_INVALID_INDEX + MESSAGE_FOLLOWUP_INVALID_INDEX + myList.size() + "\n" + DIVIDER);
+                }
+            }else{
+                //marking targeted item as completed
+                myList.get(index - 1).markAsDone();
                 System.out.println(
-                        "     " + displayIndex + ". " + myList.get(i)
+                        DIVIDER + MESSAGE_MARKED +
+                                "       " + myList.get(index - 1) + "\n" + DIVIDER
                 );
             }
-            System.out.println(DIVIDER);
-        }else if (userInputString.trim().equals(COMMAND_EXIT_PROGRAM)) {
-            System.out.println(DIVIDER + MESSAGE_BYE + DIVIDER);
-            System.exit(0);
-        }else if(userInputString.contains(COMMAND_DONE)) {
-            commandDone(userInputString);
-        }else if(userInputString.contains(COMMAND_TODO)){
-            commandTodo(userInputString);
-        }else if(userInputString.contains(COMMAND_DEADLINE)){
-            commandDeadline(userInputString);
-        }else if(userInputString.contains(COMMAND_EVENT)){
-            commandEvent(userInputString);
         }
     }
 
-    private static void commandDone(String userInputString) {
-        String description = userInputString.split("\\s",2)[1];
-        //converting string to integer
-        int index = Integer.parseInt(description);
-        //marking targeted item as completed
-        myList.get(index - 1).markAsDone();
-        System.out.println(
-                DIVIDER + MESSAGE_MARKED +
-                        "       " + myList.get(index - 1) + "\n" + DIVIDER
-        );
-    }
-
-    private static void commandTodo(String userInputString){
+    private static void commandTodo(String userInputString) throws DukeException{
         String msg = "";
-        String description = userInputString.split("\\s",2)[1];
-        myList.add(new Todo(description));
-        int index = myList.size();
-        if (index == 1) {
-            msg = " task in the list.\n";
-        } else {
-            msg = MESSAGE_ITEMS2;
+        if(userInputString.trim().equals(COMMAND_TODO)){
+            System.out.print(DIVIDER);
+            throw new DukeException(ERROR_MESSAGE_GENERAL + MESSAGE_FOLLOWUP_NUll + DIVIDER);
+        }else{
+            String description = userInputString.split("\\s",2)[1];
+            myList.add(new Todo(description));
+            int index = myList.size();
+            if (index == 1) {
+                msg = " task in the list.\n";
+            } else {
+                msg = MESSAGE_ITEMS2;
+            }
+            System.out.println(
+                    DIVIDER + MESSAGE_ADDED +
+                            "       " + myList.get(index - 1) + "\n" + MESSAGE_ITEMS1 + index + msg +
+                            DIVIDER
+            );
         }
-        System.out.println(
-                DIVIDER + MESSAGE_ADDED +
-                        "       " + myList.get(index - 1) + "\n" + MESSAGE_ITEMS1 + index + msg +
-                        DIVIDER
-        );
-
     }
 
-    private static void commandDeadline(String userInputString){
+    private static void commandDeadline(String userInputString) throws DukeException{
         String msg = "";
-        String description = userInputString.split("\\s",2)[1];
-        String details = description.split(" /by ",2)[0];
-        String date = description.split(" /by ",2)[1];
-        myList.add(new Deadline(details, date));
-        int index = myList.size();
-        if (index == 1) {
-            msg = " task in the list.\n";
-        } else {
-            msg = MESSAGE_ITEMS2;
+        if(userInputString.trim().equals(COMMAND_DEADLINE)){
+            System.out.print(DIVIDER);
+            throw new DukeException(ERROR_MESSAGE_GENERAL + MESSAGE_FOLLOWUP_NUll + DIVIDER);
+        }else{
+            String types = userInputString.split("\\s",2)[0];
+            String description = userInputString.split("\\s",2)[1];
+            String date = description.split(" /by ",2)[1];
+            myList.add(new Deadline(types, date));
+            int index = myList.size();
+            if (index == 1) {
+                msg = " task in the list.\n";
+            } else {
+                msg = MESSAGE_ITEMS2;
+            }
+            System.out.println(
+                    DIVIDER + MESSAGE_ADDED +
+                            "       " + myList.get(index - 1) + "\n" + MESSAGE_ITEMS1 + index + msg +
+                            DIVIDER
+            );
         }
-        System.out.println(
-                DIVIDER + MESSAGE_ADDED +
-                        "       " + myList.get(index - 1) + "\n" + MESSAGE_ITEMS1 + index + msg +
-                        DIVIDER
-        );
     }
 
-    private static void commandEvent(String userInputString){
+    private static void commandEvent(String userInputString) throws DukeException {
         String msg = "";
-        String description = userInputString.split("\\s",2)[1];
-        String details = description.split(" /at ",2)[0];
-        String date = description.split(" /at ",2)[1];
-        myList.add(new Event(details, date));
-        int index = myList.size();
-        if (index == 1) {
-            msg = " task in the list.\n";
+        if (userInputString.trim().equals(COMMAND_EVENT)) {
+            System.out.print(DIVIDER);
+            throw new DukeException(ERROR_MESSAGE_GENERAL + MESSAGE_FOLLOWUP_NUll + DIVIDER);
         } else {
-            msg = MESSAGE_ITEMS2;
+            String types = userInputString.split("\\s", 2)[0];
+            String description = userInputString.split("\\s", 2)[1];
+            String date = description.split(" /at ", 2)[1];
+            myList.add(new Event(types, date));
+            int index = myList.size();
+            if (index == 1) {
+                msg = " task in the list.\n";
+            } else {
+                msg = MESSAGE_ITEMS2;
+            }
+            System.out.println(
+                    DIVIDER + MESSAGE_ADDED +
+                            "       " + myList.get(index - 1) + "\n" + MESSAGE_ITEMS1 + index + msg +
+                            DIVIDER
+            );
         }
-        System.out.println(
-                DIVIDER + MESSAGE_ADDED +
-                        "       " + myList.get(index - 1) + "\n" + MESSAGE_ITEMS1 + index + msg +
-                        DIVIDER
-        );
     }
 
     /**
