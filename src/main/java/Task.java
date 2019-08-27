@@ -1,4 +1,6 @@
-public class Task {
+import java.io.Serializable;
+
+public class Task implements Serializable {
     protected String description; //User input
     protected boolean isDone; //To check if the task is completed
 
@@ -15,13 +17,16 @@ public class Task {
         return (isDone ? "\u2713" : "\u2718"); //return tick or X symbols
     }
 
+    public String toSaveString(){
+        return " | " + getStatusIcon() + " | " + description;
+    }
+
     /**
      * toString() provides a String representation of the Task object.
      *
      * @returns   a string representation of the Task object
      */
     public String toString(){
-        String cross = "\u2718";
         return "[" + getStatusIcon() + "] " + description;
     }
 }
