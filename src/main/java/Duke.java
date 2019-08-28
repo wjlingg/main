@@ -100,26 +100,26 @@ public class Duke {
     }
 
     public static void modifyFile(String filePath, int index) {
-        ArrayList<String> temp = new ArrayList<>();
         File fileToBeModified = new File(filePath);
         String line = "";
         String oldContent = "";
         String nextContent = "";
         try {
             BufferedReader reader = new BufferedReader(new FileReader(fileToBeModified));
-            int count = 0;
+            int count = -1;
             while((line = reader.readLine()) != null) {
                 count++;
                 if(count == index){
                     nextContent = line.replace("\u2718", "\u2713") + System.lineSeparator();
                     oldContent += nextContent;
+                    arrList.add(nextContent);
                 }else{
+                    arrList.add(line);
                     oldContent += line + System.lineSeparator();
                 }
             }
             FileWriter writer = new FileWriter(fileToBeModified);
             writer.write(oldContent);
-            System.out.println(oldContent);
             writer.close();
             reader.close();
         }catch (IOException e) {
@@ -138,7 +138,7 @@ public class Duke {
      */
     private static void executeCommand(String userInputString) {
         try {
-            if(userInputString.trim().equals(COMMAND_GET_LIST)) {
+            if (userInputString.trim().equals(COMMAND_GET_LIST)) {
                 System.out.println(DIVIDER + MESSAGE_TASKED);
                 for (int i = 0; i < myList.size(); i++) {
                     final int displayIndex = i + DISPLAYED_INDEX_OFFSET;
@@ -147,18 +147,18 @@ public class Duke {
                     );
                 }
                 System.out.println(DIVIDER);
-            }else if(userInputString.trim().equals(COMMAND_EXIT_PROGRAM)) {
+            } else if (userInputString.trim().equals(COMMAND_EXIT_PROGRAM)) {
                 System.out.println(DIVIDER + MESSAGE_BYE + DIVIDER);
                 System.exit(0);
-            }else if (userInputString.contains(COMMAND_DONE)) {
+            } else if (userInputString.contains(COMMAND_DONE)) {
                 commandDone(userInputString);
-            }else if(userInputString.contains(COMMAND_TODO)){
+            } else if (userInputString.contains(COMMAND_TODO)) {
                 commandTodo(userInputString);
-            }else if(userInputString.contains(COMMAND_DEADLINE)){
+            } else if (userInputString.contains(COMMAND_DEADLINE)) {
                 commandDeadline(userInputString);
-            }else if(userInputString.contains(COMMAND_EVENT)){
+            } else if (userInputString.contains(COMMAND_EVENT)) {
                 commandEvent(userInputString);
-            }else{
+            } else {
                 System.out.print(DIVIDER);
                 throw new DukeException(ERROR_MESSAGE_RANDOM + DIVIDER);
             }
@@ -185,7 +185,7 @@ public class Duke {
             }else{
                 //marking targeted item as completed
                 myList.get(index - 1).markAsDone();
-                modifyFile(filePath, arrList.size() + index - 2);
+                modifyFile(filePath,arrList.size() - myList.size() + index - 1);
                 System.out.println(
                         DIVIDER + MESSAGE_MARKED +
                                 "       " + myList.get(index - 1) + "\n" + DIVIDER

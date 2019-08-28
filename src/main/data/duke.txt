@@ -1,4 +1,4 @@
-T | ✘ | 1
-T | ✘ | 2
-T | ✘ | 1
-T | ✘ | 4
+T | ✓ | read book
+D | ✘ | return book | 2nd of December 2019, 6.00pm
+E | ✘ | project meeting | Aug 6th 2-4pm
+T | ✘ | join sports club
