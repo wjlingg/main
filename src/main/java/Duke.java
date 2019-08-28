@@ -99,6 +99,34 @@ public class Duke {
         }
     }
 
+    public static void modifyFile(String filePath, int index) {
+        ArrayList<String> temp = new ArrayList<>();
+        File fileToBeModified = new File(filePath);
+        String line = "";
+        String oldContent = "";
+        String nextContent = "";
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(fileToBeModified));
+            int count = 0;
+            while((line = reader.readLine()) != null) {
+                count++;
+                if(count == index){
+                    nextContent = line.replace("\u2718", "\u2713") + System.lineSeparator();
+                    oldContent += nextContent;
+                }else{
+                    oldContent += line + System.lineSeparator();
+                }
+            }
+            FileWriter writer = new FileWriter(fileToBeModified);
+            writer.write(oldContent);
+            System.out.println(oldContent);
+            writer.close();
+            reader.close();
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * Executes the command as specified by the {@code userInputString}
      * Adding items to the list
@@ -157,6 +185,7 @@ public class Duke {
             }else{
                 //marking targeted item as completed
                 myList.get(index - 1).markAsDone();
+                modifyFile(filePath, arrList.size() + index - 2);
                 System.out.println(
                         DIVIDER + MESSAGE_MARKED +
                                 "       " + myList.get(index - 1) + "\n" + DIVIDER
