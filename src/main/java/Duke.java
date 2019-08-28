@@ -18,10 +18,13 @@ public class Duke {
     private static final String MESSAGE_ITEMS2 = " tasks in the list.\n";
     private static final String MESSAGE_BYE = "     Bye. Hope to see you again soon!\n";
     private static final String MESSAGE_FOLLOWUP_INVALID_INDEX = "     Kindly enter command with index not more than ";
-    private static final String MESSAGE_FOLLOWUP_EMPTY_INDEX = "       Kindly enter the command again with aN INDEX.\n";
+    private static final String MESSAGE_FOLLOWUP_EMPTY_INDEX = "       Kindly enter the command again with an index.\n";
     private static final String MESSAGE_FOLLOWUP_NUll = "       Kindly enter the command again with a description.\n";
 
     private static final String ERROR_MESSAGE_GENERAL = "       ☹ OOPS!!! The description cannot be empty.\n";
+    private static final String ERROR_MESSAGE_EVENT = "       ☹ OOPS!!! Please specify the event details in this format: \n         event [event description] /at [event time or venue]\n";
+    private static final String ERROR_MESSAGE_DEADLINE = "       ☹ OOPS!!! Please specify the deadline in this format: \n         deadline [event description] /by [day/month/year time]\n         Eg: 28/8/2019 2359 (For date and time format)\n";
+    private static final String ERROR_MESSAGE_INVALID_DATE = "       ☹ OOPS!!! Please specify the date and time in this format: \n         [day/month/year time] Eg: 28/8/2019 2359\n";
     private static final String ERROR_MESSAGE_RANDOM = "     ☹ OOPS!!! I'm sorry, but I don't know what that means :-(\n";
     private static final String ERROR_MESSAGE_EMPTY_LIST = "       ☹ OOPS!!! The list is empty.\n       Kindly add a task.\n";
     private static final String ERROR_MESSAGE_EMPTY_INDEX = "       ☹ OOPS!!! The index cannot be empty.\n";
@@ -246,21 +249,31 @@ public class Duke {
             throw new DukeException(ERROR_MESSAGE_GENERAL + MESSAGE_FOLLOWUP_NUll + DIVIDER);
         }else if(userInputString.trim().charAt(8) == ' '){
             String description = userInputString.trim().split("\\s",2)[1];
-            String details = description.split(" /by ",2)[0];
-            String date = description.split(" /by ",2)[1];
-            myList.add(new Deadline(details, convertDate(date)));
-            int index = myList.size();
-            if (index == 1) {
-                msg = " task in the list.\n";
-            } else {
-                msg = MESSAGE_ITEMS2;
+            if(description.contains(" /by ")) {
+                String details = description.trim().split(" /by ", 2)[0];
+                String date = description.trim().split(" /by ", 2)[1];
+                if(details == null || date == null) {
+                    System.out.print(DIVIDER);
+                    throw new DukeException(ERROR_MESSAGE_DEADLINE + DIVIDER);
+                }else{
+                    myList.add(new Deadline(details, convertDate(date)));
+                    int index = myList.size();
+                    if (index == 1) {
+                        msg = " task in the list.\n";
+                    } else {
+                        msg = MESSAGE_ITEMS2;
+                    }
+                    System.out.println(
+                            DIVIDER + MESSAGE_ADDED +
+                                    "       " + myList.get(index - 1) + "\n" + MESSAGE_ITEMS1 + index + msg +
+                                    DIVIDER
+                    );
+                    saveFile(myList.get(index - 1).toSaveString());
+                }
+            }else{
+                System.out.print(DIVIDER);
+                throw new DukeException(ERROR_MESSAGE_DEADLINE + DIVIDER);
             }
-            System.out.println(
-                    DIVIDER + MESSAGE_ADDED +
-                            "       " + myList.get(index - 1) + "\n" + MESSAGE_ITEMS1 + index + msg +
-                            DIVIDER
-            );
-            saveFile(myList.get(index - 1).toSaveString());
         }else{
             System.out.print(DIVIDER);
             throw new DukeException(ERROR_MESSAGE_RANDOM + DIVIDER);
@@ -271,24 +284,34 @@ public class Duke {
         String msg = "";
         if (userInputString.trim().equals(COMMAND_EVENT)) {
             System.out.print(DIVIDER);
-            throw new DukeException(ERROR_MESSAGE_GENERAL + MESSAGE_FOLLOWUP_NUll + DIVIDER);
+            throw new DukeException(ERROR_MESSAGE_EVENT + DIVIDER);
         }else if(userInputString.trim().charAt(5) == ' '){
             String description = userInputString.trim().split("\\s",2)[1];
-            String details = description.split(" /at ",2)[0];
-            String date = description.split(" /at ",2)[1];
-            myList.add(new Event(details, date));
-            int index = myList.size();
-            if (index == 1) {
-                msg = " task in the list.\n";
-            } else {
-                msg = MESSAGE_ITEMS2;
+            if(description.contains(" /at ")){
+                String details = description.trim().split(" /at ", 2)[0];
+                String date = description.trim().split(" /at ", 2)[1];
+                if(details == null || date == null){
+                    System.out.print(DIVIDER);
+                    throw new DukeException(ERROR_MESSAGE_EVENT + DIVIDER);
+                }else{
+                    myList.add(new Event(details.trim(), date.trim()));
+                    int index = myList.size();
+                    if (index == 1) {
+                        msg = " task in the list.\n";
+                    } else {
+                        msg = MESSAGE_ITEMS2;
+                    }
+                    System.out.println(
+                            DIVIDER + MESSAGE_ADDED +
+                                    "       " + myList.get(index - 1) + "\n" + MESSAGE_ITEMS1 + index + msg +
+                                    DIVIDER
+                    );
+                    saveFile(myList.get(index - 1).toSaveString());
+                }
+            }else{
+                System.out.print(DIVIDER);
+                throw new DukeException(ERROR_MESSAGE_EVENT + DIVIDER);
             }
-            System.out.println(
-                    DIVIDER + MESSAGE_ADDED +
-                            "       " + myList.get(index - 1) + "\n" + MESSAGE_ITEMS1 + index + msg +
-                            DIVIDER
-            );
-            saveFile(myList.get(index - 1).toSaveString());
         }else{
             System.out.print(DIVIDER);
             throw new DukeException(ERROR_MESSAGE_RANDOM + DIVIDER);
