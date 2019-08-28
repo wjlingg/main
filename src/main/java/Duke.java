@@ -100,29 +100,25 @@ public class Duke {
     }
 
     public static void modifyFile(String filePath, int index) {
-        File fileToBeModified = new File(filePath);
-        String line = "";
-        String oldContent = "";
-        String nextContent = "";
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(fileToBeModified));
-            int count = -1;
-            while((line = reader.readLine()) != null) {
-                count++;
-                if(count == index){
-                    nextContent = line.replace("\u2718", "\u2713") + System.lineSeparator();
-                    oldContent += nextContent;
-                    arrList.add(nextContent);
-                }else{
-                    arrList.add(line);
-                    oldContent += line + System.lineSeparator();
-                }
+        ArrayList<String> temp = new ArrayList<>();
+        String tempStr = "";
+        for (int i = 0; i < arrList.size(); i++){
+            System.out.println(arrList.get(i));
+            if(i == index){
+                tempStr = arrList.get(i).replace("\u2718", "\u2713");
+                temp.add(tempStr);
+            }else{
+                temp.add(arrList.get(i));
             }
-            FileWriter writer = new FileWriter(fileToBeModified);
-            writer.write(oldContent);
-            writer.close();
-            reader.close();
-        }catch (IOException e) {
+        }
+        try {
+            FileWriter fileWriter = new FileWriter(filePath);
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+            for (String str : temp) {
+                bufferedWriter.write(str + "\n");
+            }
+            bufferedWriter.close();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
