@@ -106,7 +106,6 @@ public class Duke {
         ArrayList<String> temp = new ArrayList<>();
         String tempStr = "";
         for (int i = 0; i < arrList.size(); i++){
-            System.out.println(arrList.get(i));
             if(i == index){
                 tempStr = arrList.get(i).replace("\u2718", "\u2713");
                 temp.add(tempStr);
@@ -114,10 +113,12 @@ public class Duke {
                 temp.add(arrList.get(i));
             }
         }
+        arrList.clear();
+        arrList.addAll(temp);
         try {
             FileWriter fileWriter = new FileWriter(filePath);
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-            for (String str : temp) {
+            for (String str : arrList) {
                 bufferedWriter.write(str + "\n");
             }
             bufferedWriter.close();
