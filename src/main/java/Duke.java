@@ -99,7 +99,7 @@ public class Duke {
         }
     }
 
-    public static void modifyFile(String filePath, int index) {
+    private static void modifyFile(String filePath, int index) {
         ArrayList<String> temp = new ArrayList<>();
         String tempStr = "";
         for (int i = 0; i < arrList.size(); i++){
@@ -147,14 +147,34 @@ public class Duke {
                 System.out.println(DIVIDER + MESSAGE_BYE + DIVIDER);
                 System.exit(0);
             } else if (userInputString.contains(COMMAND_DONE)) {
-                commandDone(userInputString);
+                if(userInputString.trim().substring(0, 4).equals(COMMAND_DONE)) {
+                    commandDone(userInputString);
+                }else{
+                    System.out.print(DIVIDER);
+                    throw new DukeException(ERROR_MESSAGE_RANDOM + DIVIDER);
+                }
             } else if (userInputString.contains(COMMAND_TODO)) {
-                commandTodo(userInputString);
+                if(userInputString.trim().substring(0, 4).equals(COMMAND_TODO)) {
+                    commandTodo(userInputString);
+                }else{
+                    System.out.print(DIVIDER);
+                    throw new DukeException(ERROR_MESSAGE_RANDOM + DIVIDER);
+                }
             } else if (userInputString.contains(COMMAND_DEADLINE)) {
-                commandDeadline(userInputString);
+                if(userInputString.trim().substring(0, 8).equals(COMMAND_DEADLINE)) {
+                    commandDeadline(userInputString);
+                }else{
+                    System.out.print(DIVIDER);
+                    throw new DukeException(ERROR_MESSAGE_RANDOM + DIVIDER);
+                }
             } else if (userInputString.contains(COMMAND_EVENT)) {
-                commandEvent(userInputString);
-            } else {
+                if(userInputString.trim().substring(0, 5).equals(COMMAND_EVENT)) {
+                    commandEvent(userInputString);
+                }else{
+                    System.out.print(DIVIDER);
+                    throw new DukeException(ERROR_MESSAGE_RANDOM + DIVIDER);
+                }
+            }else{
                 System.out.print(DIVIDER);
                 throw new DukeException(ERROR_MESSAGE_RANDOM + DIVIDER);
             }
@@ -167,8 +187,8 @@ public class Duke {
         if(userInputString.trim().equals(COMMAND_DONE)){
             System.out.print(DIVIDER);
             throw new DukeException(ERROR_MESSAGE_EMPTY_INDEX + MESSAGE_FOLLOWUP_EMPTY_INDEX + DIVIDER);
-        }else{
-            String description = userInputString.split("\\s",2)[1];
+        }else if(userInputString.trim().charAt(4) == ' '){
+            String description = userInputString.trim().split("\\s",2)[1];
             //converting string to integer
             int index = Integer.parseInt(description);
             if(index > myList.size()){
@@ -187,6 +207,9 @@ public class Duke {
                                 "       " + myList.get(index - 1) + "\n" + DIVIDER
                 );
             }
+        }else{
+            System.out.print(DIVIDER);
+            throw new DukeException(ERROR_MESSAGE_RANDOM + DIVIDER);
         }
     }
 
@@ -195,8 +218,8 @@ public class Duke {
         if(userInputString.trim().equals(COMMAND_TODO)){
             System.out.print(DIVIDER);
             throw new DukeException(ERROR_MESSAGE_GENERAL + MESSAGE_FOLLOWUP_NUll + DIVIDER);
-        }else{
-            String description = userInputString.split("\\s",2)[1];
+        }else if(userInputString.trim().charAt(4) == ' '){
+            String description = userInputString.trim().split("\\s",2)[1];
             myList.add(new Todo(description));
             int index = myList.size();
             if (index == 1) {
@@ -210,6 +233,9 @@ public class Duke {
                             DIVIDER
             );
             saveFile(myList.get(index - 1).toSaveString());
+        }else{
+            System.out.print(DIVIDER);
+            throw new DukeException(ERROR_MESSAGE_RANDOM + DIVIDER);
         }
     }
 
@@ -218,8 +244,8 @@ public class Duke {
         if(userInputString.trim().equals(COMMAND_DEADLINE)){
             System.out.print(DIVIDER);
             throw new DukeException(ERROR_MESSAGE_GENERAL + MESSAGE_FOLLOWUP_NUll + DIVIDER);
-        }else{
-            String description = userInputString.split("\\s",2)[1];
+        }else if(userInputString.trim().charAt(8) == ' '){
+            String description = userInputString.trim().split("\\s",2)[1];
             String details = description.split(" /by ",2)[0];
             String date = description.split(" /by ",2)[1];
             myList.add(new Deadline(details, convertDate(date)));
@@ -235,6 +261,9 @@ public class Duke {
                             DIVIDER
             );
             saveFile(myList.get(index - 1).toSaveString());
+        }else{
+            System.out.print(DIVIDER);
+            throw new DukeException(ERROR_MESSAGE_RANDOM + DIVIDER);
         }
     }
 
@@ -243,8 +272,8 @@ public class Duke {
         if (userInputString.trim().equals(COMMAND_EVENT)) {
             System.out.print(DIVIDER);
             throw new DukeException(ERROR_MESSAGE_GENERAL + MESSAGE_FOLLOWUP_NUll + DIVIDER);
-        } else {
-            String description = userInputString.split("\\s",2)[1];
+        }else if(userInputString.trim().charAt(5) == ' '){
+            String description = userInputString.trim().split("\\s",2)[1];
             String details = description.split(" /at ",2)[0];
             String date = description.split(" /at ",2)[1];
             myList.add(new Event(details, date));
@@ -260,6 +289,9 @@ public class Duke {
                             DIVIDER
             );
             saveFile(myList.get(index - 1).toSaveString());
+        }else{
+            System.out.print(DIVIDER);
+            throw new DukeException(ERROR_MESSAGE_RANDOM + DIVIDER);
         }
     }
 
