@@ -1,11 +1,15 @@
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Duke {
     private static final ArrayList<Task> myList = new ArrayList<>();
+    private static final ArrayList<String> arrList = new ArrayList<>();
 
     private static final Scanner SCANNER = new Scanner(System.in);
     private static final int DISPLAYED_INDEX_OFFSET = 1;
+
+    private static final String filePath = "C:\\Users\\Wen Jian\\Desktop\\duke\\src\\main\\data\\duke.txt";
 
     private static final String MESSAGE_TASKED = "     Here are the tasks in your list:";
     private static final String MESSAGE_MARKED = "     Nice! I've marked this task as done:\n";
@@ -37,6 +41,7 @@ public class Duke {
      */
     public static void main(String[] args){
         showHelloMessage();
+        readFile();
         while (true) {
             String userCommand = getUserInput();
             executeCommand(userCommand);
@@ -62,6 +67,36 @@ public class Duke {
                         "     What can I do for you?\n" +
                         DIVIDER
         );
+    }
+
+    private static void readFile(){
+        try {
+            FileReader fileReader = new FileReader(filePath);
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            String content = "";
+            while((content = bufferedReader.readLine())!= null){
+                arrList.add(content);
+            }
+            fileReader.close();
+        } catch(FileNotFoundException ex) {
+            System.out.println("Unable to open file '" + filePath + "'");
+        } catch(IOException ex) {
+            System.out.println("Error reading file '" + filePath + "'");
+        }
+    }
+
+    private static void saveFile(String items){
+        arrList.add(items);
+        try{
+            FileWriter fileWriter = new FileWriter(filePath);
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+            for(String str: arrList) {
+                bufferedWriter.write(str + "\n");
+            }
+            bufferedWriter.close();
+        } catch(Exception exc){
+            exc.printStackTrace(); // If there was an error, print the info.
+        }
     }
 
     /**
@@ -149,6 +184,7 @@ public class Duke {
                             "       " + myList.get(index - 1) + "\n" + MESSAGE_ITEMS1 + index + msg +
                             DIVIDER
             );
+            saveFile(myList.get(index - 1).toSaveString());
         }
     }
 
@@ -173,6 +209,7 @@ public class Duke {
                             "       " + myList.get(index - 1) + "\n" + MESSAGE_ITEMS1 + index + msg +
                             DIVIDER
             );
+            saveFile(myList.get(index - 1).toSaveString());
         }
     }
 
@@ -197,6 +234,7 @@ public class Duke {
                             "       " + myList.get(index - 1) + "\n" + MESSAGE_ITEMS1 + index + msg +
                             DIVIDER
             );
+            saveFile(myList.get(index - 1).toSaveString());
         }
     }
 

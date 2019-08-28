@@ -10,6 +10,11 @@ public class Todo extends Task {
         super(description);//super class constructor call to the Task(description) constructor
     }
 
+    @Override
+    public String toSaveString(){
+        return "T" + super.toSaveString();
+    }
+
     // Override the inherited toString to provide the proper implementation
     @Override
     public String toString() {
