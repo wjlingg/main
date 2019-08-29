@@ -14,6 +14,7 @@ public class Duke {
     private static final String MESSAGE_TASKED = "     Here are the tasks in your list:";
     private static final String MESSAGE_MARKED = "     Nice! I've marked this task as done:\n";
     private static final String MESSAGE_ADDED = "     Got it. I've added this task:\n";
+    private static final String MESSAGE_FIND = "     Here are the matching tasks in your list:\n";
     private static final String MESSAGE_ITEMS1 = "     Now you have ";
     private static final String MESSAGE_ITEMS2 = " tasks in the list.\n";
     private static final String MESSAGE_BYE = "     Bye. Hope to see you again soon!\n";
@@ -29,11 +30,13 @@ public class Duke {
     private static final String ERROR_MESSAGE_EMPTY_LIST = "       ☹ OOPS!!! The list is empty.\n       Kindly add a task.\n";
     private static final String ERROR_MESSAGE_EMPTY_INDEX = "       ☹ OOPS!!! The index cannot be empty.\n";
     private static final String ERROR_MESSAGE_INVALID_INDEX = "     Invalid index entered.\n";
+    private static final String ERROR_MESSAGE_NOTFOUND = "     ☹ OOPS!!! I'm sorry, but there is no matching tasks in your list\n";
 
     private static final String COMMAND_GET_LIST = "list";
     private static final String COMMAND_DONE = "done";
     private static final String COMMAND_DEADLINE = "deadline";
     private static final String COMMAND_TODO = "todo";
+    private static final String COMMAND_FIND = "find";
     private static final String COMMAND_EVENT = "event";
     private static final String COMMAND_EXIT_PROGRAM = "bye";
     private static final String DIVIDER = "   ____________________________________________________________\n";
@@ -172,9 +175,16 @@ public class Duke {
                     throw new DukeException(ERROR_MESSAGE_RANDOM + DIVIDER);
                 }
             } else if (userInputString.contains(COMMAND_EVENT)) {
-                if(userInputString.trim().substring(0, 5).equals(COMMAND_EVENT)) {
+                if (userInputString.trim().substring(0, 5).equals(COMMAND_EVENT)) {
                     commandEvent(userInputString);
-                }else{
+                } else {
+                    System.out.print(DIVIDER);
+                    throw new DukeException(ERROR_MESSAGE_RANDOM + DIVIDER);
+                }
+            } else if (userInputString.contains(COMMAND_FIND)) {
+                if (userInputString.trim().substring(0, 4).equals(COMMAND_FIND)) {
+                    commandFind(userInputString);
+                } else {
                     System.out.print(DIVIDER);
                     throw new DukeException(ERROR_MESSAGE_RANDOM + DIVIDER);
                 }
@@ -316,6 +326,33 @@ public class Duke {
         }else{
             System.out.print(DIVIDER);
             throw new DukeException(ERROR_MESSAGE_RANDOM + DIVIDER);
+        }
+    }
+
+    private static void commandFind(String userInputString) throws DukeException {
+        ArrayList<String> temp = new ArrayList<>();
+        if(userInputString.trim().equals(COMMAND_FIND)){
+            System.out.print(DIVIDER);
+            throw new DukeException(ERROR_MESSAGE_GENERAL + MESSAGE_FOLLOWUP_NUll + DIVIDER);
+        }else if(userInputString.trim().charAt(4) == ' ') {
+            String description = userInputString.trim().split("\\s", 2)[1];
+            for(int i = 0; i < arrList.size(); i++){
+                String same = arrList.get(i);
+                if(same.contains(description)){
+                    temp.add(same);
+                }else if(i == arrList.size() - 1){
+                    System.out.print(DIVIDER);
+                    throw new DukeException(ERROR_MESSAGE_NOTFOUND + DIVIDER);
+                }
+            }
+            System.out.println(DIVIDER + MESSAGE_FIND);
+            for (int i = 0; i < temp.size(); i++) {
+                final int displayIndex = i + DISPLAYED_INDEX_OFFSET;
+                System.out.println(
+                        "     " + displayIndex + ". " + temp.get(i)
+                );
+            }
+            System.out.println(DIVIDER);
         }
     }
 
