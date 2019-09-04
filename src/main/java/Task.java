@@ -13,8 +13,12 @@ public class Task {
         isDone = true;
     } //marked as completed when done
 
+//    public String getStatusIcon() {
+//        return (isDone ? "\u2713" : "\u2718"); //return tick or X symbols
+//    }
+
     public String getStatusIcon() {
-        return (isDone ? "\u2713" : "\u2718"); //return tick or X symbols
+        return (isDone ? "+" : "-"); //return plus or minus symbols
     }
 
     public String toSaveString(){

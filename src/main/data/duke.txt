@@ -1,11 +1,2 @@
-T | ✓ | read book
-D | ✘ | return book | 28th of August 2019, 11.59pm
-E | ✘ | project meeting | Aug 6th 2-4pm
-T | ✓ | join sports club
-T | ✘ | buy lunch for family
-E | ✓ | IFG | 1/9/2019 0900
-D | ✘ | 2113T Level-10 | 2nd of September 2019, 11.59pm
-T | ✘ | buy dinner
-T | ✓ | buy breakfast
-T | ✘ | donate book
-T | ✓ | book sale
+T | + | text ui testing
+D | - | return book | 2nd of December 2019, 6.00pm
