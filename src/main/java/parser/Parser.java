@@ -1,5 +1,6 @@
 package parser;
 
+import command.*;
 import exception.DukeException;
 
 import static common.Messages.*;
