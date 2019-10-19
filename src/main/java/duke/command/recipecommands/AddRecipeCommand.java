@@ -10,8 +10,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 
 import static duke.common.Messages.*;
-import static duke.common.RecipeMessages.COMMAND_ADD_RECIPE;
-import static duke.common.RecipeMessages.MESSAGE_RECIPE_ADDED;
+import static duke.common.RecipeMessages.*;
 
 public class AddRecipeCommand extends Command<RecipeList, Ui, RecipeStorage> { // need to settle the problem of duplicate recipes.
 
@@ -27,14 +26,33 @@ public class AddRecipeCommand extends Command<RecipeList, Ui, RecipeStorage> { /
             System.out.println("stuck here 7");
         } else if (userInput.trim().charAt(9) == ' ') {
             String description = userInput.split("\\s", 2)[1].trim();
-            RecipeTitle recipeTitle = new RecipeTitle(description);
-            recipeList.addRecipe(recipeTitle);
-            recipeStorage.saveFile(recipeList);
-            arrayList.add(MESSAGE_RECIPE_ADDED + "       " + description + "\n" + "Now you have " + recipeList.getSize() + " recipe(s) in the list.");
+            if (description.contains(" ")) {
+                String recipeIndex = description.split("\\s", 2)[0].trim();
+                if (isParsableInt(recipeIndex)) {
+                    String title = description.split("\\s", 2)[1].trim();
+                    RecipeTitle recipeTitle = new RecipeTitle(Integer.parseInt(recipeIndex), title);
+                    recipeList.addRecipe(recipeTitle);
+                    recipeStorage.saveFile(recipeList);
+                    arrayList.add(MESSAGE_RECIPE_ADDED + "       " + description + "\n" + "Now you have " + recipeList.getSize() + " recipe(s) in the list.");
+                } else {
+                    arrayList.add(ERROR_MESSAGE_INVALID_RECIPE_FORMAT);
+                }
+            } else {
+                arrayList.add(ERROR_MESSAGE_INVALID_RECIPE_FORMAT);
+            }
         } else {
             arrayList.add(ERROR_MESSAGE_RANDOM);
         }
         return arrayList;
+    }
+
+    private static boolean isParsableInt(String input) {
+        try {
+            Integer.parseInt(input);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 
     @Override
