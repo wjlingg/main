@@ -1,6 +1,5 @@
 package duke.parser;
 
-import duke.Duke;
 import duke.command.Command;
 import duke.command.CommandBooking;
 import duke.command.CommandIngredients;
@@ -9,7 +8,6 @@ import duke.command.inventorycommands.AddIngredientCommand;
 import duke.command.inventorycommands.DeleteIngredientCommand;
 import duke.command.inventorycommands.ListIngredientsCommand;
 import duke.command.recipecommands.*;
-import duke.exception.DukeException;
 import duke.list.recipelist.RecipeIngredientList;
 import duke.list.recipelist.RecipeList;
 import duke.list.recipelist.RecipeTitleList;
@@ -50,23 +48,21 @@ public class Parser {
     public static Command<RecipeList, Ui, RecipeStorage> parseRecipe(String input) {
         if (input.trim().contains(COMMAND_ADD_RECIPE)) {
             return new AddRecipeCommand(input);
-        } else if (input.trim().contains(COMMAND_ADD_RECIPE_INGREDIENT)) {
-            return new AddRecipeIngredientCommand(input);
-        }else {
+        } else {
             System.out.println("went to listallrecipes");
             return new ListAllRecipeCommand(input);
         }
     }
 
-//    public static Command<RecipeList, Ui, RecipeStorage> parseRecipeIngredient(String input) throws DukeException {
-//        if (input.trim().contains(COMMAND_ADD_RECIPE_INGREDIENT)) {
-//            return new AddRecipeIngredientCommand(input);
-//        } else if (input.trim().contains(COMMAND_LIST_RECIPE_INGREDIENT)) {
-//            return new ListRecipeIngredientCommand(input);
-//        } else {
-//            return new DeleteRecipeIngredientCommand(input);
-//        }
-//    }
+    public static Command<RecipeIngredientList, Ui, RecipeIngredientStorage> parseRecipeIngredient(String input) {
+        if (input.trim().contains(COMMAND_ADD_RECIPE_INGREDIENT)) {
+            return new AddRecipeIngredientCommand(input);
+        } else if (input.trim().contains(COMMAND_LIST_RECIPE_INGREDIENT)) {
+            return new ListRecipeIngredientCommand(input);
+        } else {
+            return new DeleteRecipeIngredientCommand(input);
+        }
+    }
 
     public static CommandBooking parseBooking(String userInputCommand) {
         if (userInputCommand.contains(COMMAND_FIND_BOOKING)) {

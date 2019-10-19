@@ -9,7 +9,7 @@ public class RecipeTitle {
         this.recipeTitle = recipeTitle;
     }
 
-    public RecipeTitle(Integer index, String recipeTitle) {
+    public RecipeTitle(int index, String recipeTitle) {
         this.recipeTitle = recipeTitle;
         this.index = index;
     }
@@ -23,7 +23,7 @@ public class RecipeTitle {
     }
 
     public String toSaveString() {
-        return index + " | " + recipeTitle;
+        return recipeTitle;
     }
 
     public String toString() {
