@@ -15,10 +15,12 @@ public class RecipeTitle {
     }
 
     public int getIndex() {
+        System.out.println("this is the recipe index: " + index);
         return this.index;
     }
 
     public String getTitle() {
+        System.out.println("this is the recipe title: " + recipeTitle);
         return this.recipeTitle;
     }
 

@@ -28,9 +28,13 @@ public class AddRecipeCommand extends Command<RecipeList, Ui, RecipeStorage> { /
             String description = userInput.split("\\s", 2)[1].trim();
             if (description.contains(" ")) {
                 String recipeIndex = description.split("\\s", 2)[0].trim();
+                System.out.println("this is the recipe index: " + recipeIndex);
                 if (isParsableInt(recipeIndex)) {
                     String title = description.split("\\s", 2)[1].trim();
+                    System.out.println("1this is the recipe title: " + title);
                     RecipeTitle recipeTitle = new RecipeTitle(Integer.parseInt(recipeIndex), title);
+                    System.out.println("2this is the recipe index: " + recipeTitle.getIndex());
+                    System.out.println("3this is the recipe title: " + recipeTitle.getTitle());
                     recipeList.addRecipe(recipeTitle);
                     recipeStorage.saveFile(recipeList);
                     arrayList.add(MESSAGE_RECIPE_ADDED + "       " + description + "\n" + "Now you have " + recipeList.getSize() + " recipe(s) in the list.");
